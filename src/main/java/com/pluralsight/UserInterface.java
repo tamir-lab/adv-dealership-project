@@ -304,7 +304,8 @@ public class UserInterface {
 
                 ArrayList<Vehicle> vehicles = dealership.getAllVehicles();
                 for (Vehicle vehicle1 : vehicles) {
-                    if (vehicle.getVin() == vin){
+
+                    if (vehicle1.getVin() == vin){
                         vehicle = vehicle1;
                     }
                 }
