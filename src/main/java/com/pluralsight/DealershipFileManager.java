@@ -6,6 +6,9 @@ import java.util.ArrayList;
 public class DealershipFileManager {
 
     public Dealership getDealership() {
+
+        Dealership dealership = null;
+        ArrayList<Vehicle> inventory = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("dealership.csv"))) {
 
             String line = br.readLine();
@@ -14,8 +17,7 @@ public class DealershipFileManager {
             String name = parts[0];
             String address = parts[1];
             String phone = parts[2];
-            Dealership dealership = new Dealership(name, address, phone);
-            ArrayList<Vehicle> inventory = new ArrayList<>();
+            dealership = new Dealership(name, address, phone);
             while ((line = br.readLine()) != null) {
                 String[] partsCar = line.split("\\|");
                 int vin = Integer.parseInt(partsCar[0]);
@@ -36,6 +38,28 @@ public class DealershipFileManager {
         } catch (IOException e) {
             System.out.println("Something went wrong");
         }
-        return null;
+        return dealership;
+    }
+    public void saveDealership(Dealership dealership) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("dealership.csv")) ) {
+            bw.write(dealership.getName() + "|" + dealership.getAddress() + "|" + dealership.getPhone());
+            bw.newLine();
+            ArrayList<Vehicle> inventory = dealership.getAllVehicles();
+
+            for (Vehicle vehicle : inventory) {
+                bw.write(vehicle.getVin() + "|" +
+                        vehicle.getYear() + "|" +
+                        vehicle.getMake() + "|" +
+                        vehicle.getModel() + "|" +
+                        vehicle.getVehicleType() + "|" +
+                        vehicle.getColor() + "|" +
+                        vehicle.getOdometer() + "|" +
+                        vehicle.getPrice());
+                bw.newLine();
+            }
+            System.out.println("Dealership saved.");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
